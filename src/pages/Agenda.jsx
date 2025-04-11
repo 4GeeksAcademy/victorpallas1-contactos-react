@@ -11,6 +11,7 @@ export const Agenda = () => {
             if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
             const dataJson = await response.json();
+            dispatch({type:"set_contacts",payload:dataJson.contacts})
             setContacts(dataJson.contacts);
         } catch (error) {
             console.error("Error al obtener los contactos:", error);
@@ -43,6 +44,9 @@ export const Agenda = () => {
                 {contacts.map((contact) => (
                     <div key={contact.id} className="col-md-4 mb-3">
                         <div className="card">
+                            <div className="card-header">
+                                Contacto en Agenda
+                            </div>
                             <div className="card-body">
                                 <h5 className="card-title">{contact.name}</h5>
                                 <p className="card-text"><strong>Teléfono:</strong> {contact.phone}</p>
