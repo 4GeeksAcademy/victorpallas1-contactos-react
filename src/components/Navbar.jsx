@@ -16,6 +16,10 @@ export const Navbar = () => {
 					<p></p>
 					    <button className="btn btn-primary">Ir a Agenda</button>
 					</Link>
+					<Link to="/addContacto">
+					<p></p>
+					    <button className="btn btn-primary">Añadir Contacto</button>
+					</Link>
 				</div>
 			</div>
 		</nav>
