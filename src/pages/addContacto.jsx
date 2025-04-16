@@ -1,58 +1,62 @@
-import React, {useState,useEffect} from "react"
-import { json, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
+const AddContacto = () => {
+    const navigate = useNavigate();
+    const { dispatch } = useGlobalReducer();
 
-const addContacto=()=>{
-    const navigate=useNavigate()
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        email: "",
+        address: ""
+    });
 
-    const { store, dispatch } = useGlobalReducer();
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value});
+    };
 
-    const { contacts } = store
-    const [contact, setContact] = useState([{name:"",phone:"", email:"", addres:"" }]);
-    const addContact = async(contact) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await fetch ("https://playground.4geeks.com/contact/agendas/Victor/contacts",{
-                method: "POST", headers: {"Content-Type": "application/json"},body:JSON.stringify(contact)
-            })
-            const data = await response.json()
-            dispatch({type:"add_contact",payload:data})
+            const response = await fetch("https://playground.4geeks.com/contact/agendas/Victor/contacts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            });
 
-            //return data
-            
+            if (!response.ok) throw new Error("No se pudo crear el contacto");
 
-            
+            const data = await response.json();
+            dispatch({ type: "add_contact", payload: data });
+
+            navigate("/agenda"); // redirige a Agenda
         } catch (error) {
-            console.error("tu contacto no fue añadido",error)
-            //return null
+            console.error("Error al añadir contacto:", error);
         }
-    }
+    };
 
     return (
-        <div className="m-auto text-center w-50">
-        <button onClick={getTodos} className="btn btn-info mb-3 ms-2">Cargar Contactos API</button>
-        <div className="row">
-            {contacts.map((contact) => (
-                <div key={contact.id} className="col-md-4 mb-3">
-                    <div className="card">
-                        <div className="card-header">
-                            Contacto en Agenda
-                        </div>
-                        <div className="card-body">
-                            <h5 className="card-title">{contact.name}</h5>
-                            <p className="card-text"><strong>Teléfono:</strong> {contact.phone}</p>
-                            <p className="card-text"><strong>Email:</strong> {contact.email}</p>
-                            <p className="card-text"><strong>Dirección:</strong> {contact.address}</p>
-                            <button 
-                                onClick={() => deleteContact(contact.id)} 
-                                className="btn btn-danger mt-2"
-                            >
-                                Eliminar
-                            </button>
-                        </div>
-                    </div>
+        <div className="container mt-5">
+            <h2 className="mb-4">Agregar Contacto</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <input type="text" className="form-control" name="name" placeholder="Nombre" onChange={handleChange} required />
                 </div>
-            ))}
+                <div className="mb-3">
+                    <input type="text" className="form-control" name="phone" placeholder="Teléfono" onChange={handleChange} required />
+                </div>
+                <div className="mb-3">
+                    <input type="email" className="form-control" name="email" placeholder="Email" onChange={handleChange} required />
+                </div>
+                <div className="mb-3">
+                    <input type="text" className="form-control" name="address" placeholder="Dirección" onChange={handleChange} required />
+                </div>
+                <button type="submit" className="btn btn-primary">Guardar Contacto</button>
+            </form>
         </div>
-    </div>
-    )
-}
+    );
+};
+
+export default AddContacto;

@@ -18,8 +18,9 @@ export const Navbar = () => {
 					</Link>
 					<Link to="/addContacto">
 					<p></p>
-					    <button className="btn btn-primary">Añadir Contacto</button>
+					    <button className="btn btn-success">Añadir Conctacto</button>
 					</Link>
+					
 				</div>
 			</div>
 		</nav>
